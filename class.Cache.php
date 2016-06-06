@@ -37,7 +37,7 @@ class Cache
             if (file_exists($path)) {
                 $this->CACHE_PATH = $path;
             } else {
-                throw new Exception('Path:'."\r\n".$path."\r\n".'Doesn\'t exists.'); 
+                throw new Exception('Path:'."\r\n".$path."\r\n".'Doesn\'t exists.');
            }
         } else {
             throw new Exception('Please specify path for cache.');
@@ -80,8 +80,7 @@ class Cache
     */
     public function get(STRING $key): STRING
     {
-        $path = $this->CACHE_PATH.$key.$this->EXT;
-        $file = file_get_contents($path);
+        $file = file_get_contents($this->CACHE_PATH.$key.$this->EXT);
 
         if ($this->compress) {
             $file = gzdecode($file);
@@ -104,4 +103,3 @@ class Cache
         return file_exists($path) && $_SERVER['REQUEST_TIME']-filemtime($path)<$time;
     }
 }
-
