@@ -18,7 +18,7 @@ class Cache
     private $EXT = '.txt';
 
     /**
-    * Config for compression.
+    * Config for compression mode.
     *
     * @var bool
     */
@@ -65,11 +65,7 @@ class Cache
     */
     public function set(STRING $key, STRING $value)
     {
-        if ($this->compress) {
-            $value = gzencode($value, 9);
-        }
-
-        file_put_contents($this->CACHE_PATH.$key.$this->EXT, $value);
+        file_put_contents($this->CACHE_PATH.$key.$this->EXT, ($this->compress ? gzencode($value, 9) : $value));
     }
 
     /**
