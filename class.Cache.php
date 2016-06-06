@@ -82,11 +82,7 @@ class Cache
     {
         $file = file_get_contents($this->CACHE_PATH.$key.$this->EXT);
 
-        if ($this->compress) {
-            $file = gzdecode($file);
-        }
-
-        return $file;
+        return ($this->compress) ? gzdecode($file) : $file;
     }
 
     /**
