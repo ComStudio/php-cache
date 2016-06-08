@@ -69,7 +69,7 @@ class Cache
     }
 
     /**
-    * Display value of cache.
+    * Return contents cache.
     *
     * @param string $key cache key.
     * @return string cache value.
