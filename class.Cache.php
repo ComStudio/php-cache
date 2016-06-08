@@ -8,14 +8,14 @@ class Cache
     *
     * @var string
     */
-    private $CACHE_PATH = './';
+    private $path = './';
 
     /**
     * Variable with extension for cache.
     *
     * @var string
     */
-    private $EXT = '.txt';
+    private $ext = '.txt';
 
     /**
     * Config for compression mode.
@@ -35,16 +35,16 @@ class Cache
     {
         if (isset($path)) {
             if (file_exists($path)) {
-                $this->CACHE_PATH = $path;
+                $this->path = $path;
             } else {
                 throw new Exception('Path:'."\r\n".$path."\r\n".'Doesn\'t exists.');
-           }
+            }
         } else {
             throw new Exception('Please specify path for cache.');
         }
 
         if (isset($ext)) {
-            $this->EXT = $ext;
+            $this->ext = $ext;
         }
 
         if ($compress) {
@@ -52,7 +52,7 @@ class Cache
                 throw new Exception('Please install or enable "zlib" libary, if you want use compression mode.');
             }
 
-            $this->EXT = $this->EXT.'.gz';
+            $this->ext = $this->ext.'.gz';
             $this->compress = true;
         }
     }
@@ -65,7 +65,7 @@ class Cache
     */
     public function set(STRING $key, STRING $value)
     {
-        file_put_contents($this->CACHE_PATH.$key.$this->EXT, ($this->compress ? gzencode($value, 9) : $value));
+        file_put_contents($this->path.$key.$this->ext, ($this->compress ? gzencode($value, 9) : $value));
     }
 
     /**
@@ -76,9 +76,9 @@ class Cache
     */
     public function get(STRING $key): STRING
     {
-        $file = file_get_contents($this->CACHE_PATH.$key.$this->EXT);
+        $value = file_get_contents($this->path.$key.$this->ext);
 
-        return ($this->compress) ? gzdecode($file) : $file;
+        return $this->compress ? gzdecode($value) : $value;
     }
 
     /**
@@ -90,8 +90,8 @@ class Cache
     */
     public function valid(STRING $key, INT $time): BOOL
     {
-        $path = $this->CACHE_PATH.$key.$this->EXT;
+        $path = $this->path.$key.$this->ext;
 
-        return file_exists($path) && $_SERVER['REQUEST_TIME']-filemtime($path)<$time;
+        return file_exists($path) && $_SERVER['REQUEST_TIME']-filemtime($path) < $time;
     }
 }
