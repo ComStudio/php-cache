@@ -4,21 +4,21 @@ namespace KsaR\Components;
 class Cache
 {
     /**
-    * Variable with path for cache.
+    * Path for cache.
     *
     * @var string
     */
     private $path = './';
 
     /**
-    * Variable with extension for cache.
+    * Extension for cache.
     *
     * @var string
     */
     private $ext = '.txt';
 
     /**
-    * Config for compression mode.
+    * Compression gzip enable.
     *
     * @var bool
     */
@@ -27,9 +27,9 @@ class Cache
     /**
     * Constructor
     *
-    * @param string $path directory for cache.
+    * @param string $path path for cache.
     * @param string $ext optional extension for cache.
-    * @param bool $compress defines that using gzip compress or not.
+    * @param bool $compress compression gzip enable.
     */
     public function __construct(STRING $path, STRING $ext, BOOL $compress = false)
     {
@@ -60,7 +60,7 @@ class Cache
     /**
     * Insert/Update the cache.
     *
-    * @param string $key cache name.
+    * @param string $key cache key.
     * @param string $value cache value.
     */
     public function set(STRING $key, STRING $value)
@@ -71,7 +71,7 @@ class Cache
     /**
     * Display value of cache.
     *
-    * @param string $key cache name.
+    * @param string $key cache key.
     * @return string cache value.
     */
     public function get(STRING $key): STRING
@@ -84,7 +84,7 @@ class Cache
     /**
     * Validate cache.
     *
-    * @param string $key cache name.
+    * @param string $key cache key.
     * @param int $time time in seconds that cache will be max valid.
     * @return bool.
     */
