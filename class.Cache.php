@@ -1,6 +1,28 @@
 <?php
+/**
+* Cache system
+*
+* PHP version 7
+*
+* @category Cache
+* @package  KsaR_Components
+* @author   KsaR
+* @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
+* @link     https://github.com/KsaR99/php-cache
+*
+*/
 namespace KsaR\Components;
 
+/**
+* Cache Class
+*
+* @category Cache
+* @package  KsaR_Components
+* @author   KsaR
+* @license  http://www.gnu.org/copyleft/gpl.html GNU General Public License
+* @link     https://github.com/KsaR99/php-cache/blob/master/class.Cache.php
+*
+*/
 class Cache
 {
     /**
