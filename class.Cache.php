@@ -30,88 +30,97 @@ class Cache
      *
      * @var string
      */
-    private $path;
+    private static $path;
 
     /**
      * Extension for cache.
      *
      * @var string
      */
-    private $ext = '.txt';
+    private static $extension;
 
     /**
      * Compression gzip enable.
      *
      * @var bool
      */
-    private $compress = false;
+    private static $isCompressed = false;
 
     /**
      * Constructor
      *
-     * @param $path path for cache.
-     * @param $ext optional extension for cache.
-     * @param $compress compression gzip enable.
+     * @param string $path path for cache.
+     * @param string $extension extension for cache.
+     * @param bool $isCompressed compress compression gzip enable.
+     * @throws \Exception
      */
-    public function __construct(STRING $path, STRING $ext, BOOL $compress)
+    public function __construct(string $path, string $extension, bool $isCompressed)
     {
-        if (isset($path)) {
-            if (!file_exists($path)) {
-                throw new \Exception('Path:'."\r\n".$path."\r\n".'Doesn\'t exists.');
-            }
-                $this->path = $path;
-        } else {
-            throw new \Exception('Please specify path for cache.');
+        if (!isset($path) || !file_exists($path)) {
+            throw new \InvalidArgumentException('The specified path does not exist.');
         }
 
-        if (isset($ext)) {
-            $this->ext = $ext;
-        }
+        static::$path = $path;
+        static::$extension = $extension;
 
-        if (isset($compress) && $compress) {
+        if ($isCompressed) {
             if (!extension_loaded('zlib')) {
                 throw new \Exception('Please install or enable "zlib" libary, if you want to use compression mode.');
             }
 
-            $this->ext = $this->ext.'.gz';
-            $this->compress = true;
+            static::$extension = static::$extension.'.gz';
+            static::$isCompressed = true;
         }
     }
 
     /**
      * Insert/Update the cache.
      *
-     * @param $key cache key.
-     * @param $value cache value.
+     * @param string $key cache key.
+     * @param string $value cache value.
      */
-    public function set(STRING $key, STRING $value)
+    public function set(string $key, string $value)
     {
-        file_put_contents($this->path.$key.$this->ext, ($this->compress ? gzencode($value, 9) : $value));
+        $path = static::fullPath($key);
+
+        file_put_contents($path, (static::$isCompressed ? gzencode($value, 9) : $value));
     }
 
     /**
      * Return contents cache.
      *
-     * @param $key cache key.
-     * @return cache value.
+     * @param string $key cache key.
+     * @return string cache value.
      */
-    public function get(STRING $key): STRING
+    public function get(string $key): string
     {
-        $value = file_get_contents($this->path.$key.$this->ext);
+        $path = static::fullPath($key);
 
-        return $this->compress ? gzdecode($value) : $value;
+        $value = file_get_contents($path);
+
+        return static::$isCompressed ? gzdecode($value) : $value;
     }
 
     /**
      * Validate cache.
      *
-     * @param $key cache key.
-     * @param $time time in seconds that cache will be max valid.
+     * @param string $key cache key.
+     * @param int $time time in seconds that cache will be max valid.
+     * @return bool
      */
-    public function valid(STRING $key, INT $time): BOOL
+    public function valid(string $key, int $time): bool
     {
-        $path = $this->path.$key.$this->ext;
+        $path = static::fullPath($key);
 
         return file_exists($path) && $_SERVER['REQUEST_TIME']-filemtime($path) < $time;
+    }
+
+    /**
+     * @param string $key
+     * @return string
+     */
+    private static function fullPath(string $key)
+    {
+        return static::$path.$key.static::$extension;
     }
 }
