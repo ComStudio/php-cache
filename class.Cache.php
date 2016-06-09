@@ -54,7 +54,7 @@ class Cache
      * @param bool $isCompressed compress compression gzip enable.
      * @throws \Exception
      */
-    public function __construct(string $path, string $extension, bool $isCompressed)
+    public function __construct(string $path, string $extension = '.dat', bool $isCompressed = false)
     {
         if (!isset($path) || !file_exists($path)) {
             throw new \InvalidArgumentException('The specified path does not exist.');
